@@ -6,26 +6,6 @@ const db = mysql.createConnection({
     database: "employee_db",
 })
 
-const chooseOption = (type) => {
-    switch (type) {
-        case 'VIEW ALL EMPLOYEES': {
-            db.query('SELECT * FROM employee', (err, employees) => {
-                console.table(employees)
-            });
-        }
-        case 'VIEW ALL DEPARTMENTS': {
-            db.query('SELECT * FROM department', (err, departments) => {
-                console.table(departments)
-            });
-        }
-        case 'VIEW ALL ROLES': {
-            db.query('SELECT * FROM role', (err, roles) => {
-                console.table(roles)
-            });
-        }
-    }
-}
-
 let chooseList = () => {
 const prompt = inquirer.createPromptModule();
 prompt ({
@@ -39,5 +19,25 @@ prompt ({
     chooseOption(answers.selection);
 })
 };
+
+const chooseOption = (type) => {
+    if (type === 'VIEW ALL EMPLOYEES') {
+            db.query('SELECT * FROM employee', (err, employees) => {
+                console.table(employees)
+            });
+    }
+    if (type === 'VIEW ALL DEPARTMENTS') {
+        db.query('SELECT * FROM department', (err, departments) => {
+            console.table(departments)
+            });
+    }
+    if (type === 'VIEW ALL ROLES') {
+        db.query('SELECT * FROM role', (err, roles) => {
+            console.table(roles)
+            });
+    }
+}
+
+
 
 chooseList();
