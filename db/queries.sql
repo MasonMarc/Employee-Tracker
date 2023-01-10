@@ -1,3 +1,8 @@
-SELECT * FROM department;
-SELECT * FROM employee;
-SELECT * FROM role;
+
+-- add department
+
+-- add role
+
+-- add employee
+
+-- update employee role

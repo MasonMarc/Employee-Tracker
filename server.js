@@ -1,4 +1,5 @@
 const inquirer = require('inquirer');
+const prompt = inquirer.createPromptModule();
 const mysql = require('mysql2');
 
 const db = mysql.createConnection({
@@ -6,38 +7,58 @@ const db = mysql.createConnection({
     database: "employee_db",
 })
 
-let chooseList = () => {
-const prompt = inquirer.createPromptModule();
-prompt ({
-    type: 'list',
-    name: 'selection',
-    message: 'choose one of the following',
-    choices: ['VIEW ALL EMPLOYEES','VIEW ALL DEPARTMENTS','VIEW ALL ROLES']
-    
-})
-.then((answers) => {
-    chooseOption(answers.selection);
-})
+// let chooseList = () => {
+//     const prompt = inquirer.createPromptModule();
+//     prompt({
+//         type: 'list',
+//         name: 'selection',
+//         message: 'choose one of the following',
+//         choices: ['VIEW ALL EMPLOYEES', 'VIEW ALL DEPARTMENTS', 'VIEW ALL ROLES', 'ADD A DEPARTMENT']
+//     })
+//         .then((answers) => {
+
+//             chooseOption(answers);
+//         })
+// };
+const init = () => {
+    prompt({
+        type: 'rawlist',
+        name: 'selection',
+        message: 'choose one of the following',
+        choices: ['VIEW ALL EMPLOYEES', 'VIEW ALL DEPARTMENTS', 'VIEW ALL ROLES', 'ADD A DEPARTMENT']
+    })
+        .then((answers) => {
+
+            chooseOption(answers.selection);
+        })
 };
 
-const chooseOption = (type) => {
-    if (type === 'VIEW ALL EMPLOYEES') {
-            db.query('SELECT * FROM employee', (err, employees) => {
-                console.table(employees)
-            });
+const chooseOption = (selection) => {
+    switch (selection) {
+    case 'VIEW ALL EMPLOYEES': {
+        db.query('SELECT * FROM employee', (err, employees) => {
+            console.table(employees)
+            init();
+        });
+        break;
     }
-    if (type === 'VIEW ALL DEPARTMENTS') {
+    case 'VIEW ALL DEPARTMENTS': {
         db.query('SELECT * FROM department', (err, departments) => {
             console.table(departments)
-            });
+            init();
+        });
+        break;
     }
-    if (type === 'VIEW ALL ROLES') {
+    case 'VIEW ALL ROLES': {
         db.query('SELECT * FROM role', (err, roles) => {
             console.table(roles)
-            });
+            init();
+        });
+        break;
     }
 }
+};
 
 
 
-chooseList();
+init();
