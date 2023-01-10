@@ -1,0 +1,24 @@
+{
+  "name": "track",
+  "version": "1.0.0",
+  "description": "employee database manager using Node.js, Inquirer, and MySQL",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \\\"Error: no test specified\\\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/MasonMarc/Employee-Tracker.git"
+  },
+  "author": "MasonMarc",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/MasonMarc/Employee-Tracker/issues"
+  },
+  "homepage": "https://github.com/MasonMarc/Employee-Tracker#readme",
+  "dependencies": {
+    "console.table": "^0.10.0",
+    "inquirer": "^9.1.4",
+    "mysql2": "^2.3.3"
+  }
+}
