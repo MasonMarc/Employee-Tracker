@@ -20,27 +20,24 @@ const init = () => {
         })
 };
 
-const chooseOption = (selection) => {
+const chooseOption = async (selection) => {
     switch (selection) {
         case 'VIEW ALL EMPLOYEES': {
-            db.query('SELECT * FROM employee', (err, employees) => {
-                console.table(employees)
-                init();
-            });
+            const val = await db.query('SELECT * FROM employee')
+            console.table(val[0]);
+            init();
             break;
         }
         case 'VIEW ALL DEPARTMENTS': {
-            db.query('SELECT * FROM department', (err, departments) => {
-                console.table(departments)
-                init();
-            });
+            const val1 = await db.query('SELECT * FROM department')
+            console.table(val1[0])
+            init();
             break;
         }
         case 'VIEW ALL ROLES': {
-            db.query('SELECT * FROM role', (err, roles) => {
-                console.table(roles)
-                init();
-            });
+            const val2 = await db.query('SELECT * FROM role')
+            console.table(val2[0])
+            init();
             break;
         }
         case 'ADD A DEPARTMENT': {
@@ -50,14 +47,9 @@ const chooseOption = (selection) => {
                 message: 'please enter new department name'
             })
                 .then((answers) => {
-                    db.query(`INSERT INTO department (name)
-        VALUES
-        ('${answers.name}');`,
-                        (err, departments) => {
-                            console.table(departments)
-                            init();
-                        });
-                })
+                    insertDepartment(answers);
+                    init();
+                });
             break;
         }
         case 'ADD A ROLE': {
@@ -75,13 +67,8 @@ const chooseOption = (selection) => {
                 .then((answers) => {
                     console.log(answers.title);
                     console.log(answers.salary);
-                    db.query(`INSERT INTO role (title, salary, department_id)
-                    VALUES
-                    ('${answers.title}', ${answers.salary}, 1);`,
-                        (err, roles) => {
-                            console.table(roles)
-                            init();
-                        });
+                    insertRole(answers);
+                    init();
                 })
             break;
         }
@@ -100,58 +87,65 @@ const chooseOption = (selection) => {
                 .then((answers) => {
                     console.log(answers.first_name);
                     console.log(answers.last_name);
-                    db.query(`INSERT INTO employee (first_name, last_name, role_id, manager_id)
-                    VALUES
-                    ('${answers.first_name}', '${answers.last_name}', 1, 1);`,
-                        (err, employees) => {
-                            console.table(employees)
-                            init();
-                        });
-                })
+                    insertEmployee(answers)
+                    init();
+                });
             break;
         }
-        // case 'UPDATE AN EMPLOYEE ROLE': {
-        //     prompt([{
-        //         type: 'rawlist',
-        //         name: 'selection',
-        //         message: 'please select employee to update role',
-        //         choices: [employees]
-        //     },
-        //     ])
-        //         .then((answers) => {
-        //             console.log(answers);
-        //             db.query(`UPDATE employees
-        //             SET role_id=1
-        //             WHERE first_name=${};`,
-        //                 (err, employees) => {
-        //                     console.table(employees)
-        //                     init();
-        //                 });
-        //         })
-        //     break;
-        // }
     }
 };
 
-
-
-// init();
-const employeeRole = async () => {
-    prompt({
-        type: 'rawlist',
-        name: 'selection',
-        message: 'choose employee to update role',
-        choices: await employeeList(),
-    })
-    .then((answers) => {
-        console.log(answers.selection);
-    })
+const insertDepartment = async (answers) => {
+    const val = await db.query(`INSERT INTO department (name)
+        VALUES
+        ('${answers.name}');`)
+                    console.table(val[0])
 }
 
-const employeeList = async () => {
-    const departmentQuery = `SELECT CONCAT(first_name, ' ', last_name) AS name FROM employee;`;
-    const departments = await db.query(departmentQuery);
-    return departments[0];
-};
+const insertRole = async (answers) => {
+    const val4 = await db.query(`INSERT INTO role (title, salary, department_id)
+                    VALUES
+                    ('${answers.title}', ${answers.salary}, 1);`)
+    console.log(answers.title);
+    console.log(answers.salary);
+    console.table(val4[0])
+}
+const insertEmployee = async (answers) => {
+    const val = await db.query(`INSERT INTO employee (first_name, last_name, role_id, manager_id)
+    VALUES
+    ('${answers.first_name}', '${answers.last_name}', 1, 1);`)
+    
+    console.log(answers.first_name);
+    console.log(answers.last_name);
+    console.table(val[0])
+}
 
-employeeRole();
+
+init();
+// const employeeRole = async () => {
+//     const emp = await employeeList();
+//     prompt({
+//         type: 'rawlist',
+//         name: 'selection',
+//         message: 'choose employee to update role',
+//         choices: emp,
+//     })
+//         .then((answers) => {
+//             roleChange(answers);
+//         })
+// }
+
+// const employeeList = async () => {
+//     const employeeSelect = `SELECT CONCAT(first_name, ' ', last_name) AS name FROM employee;`;
+//     const employees = await db.query(employeeSelect);
+//     return employees[0];
+// };
+
+// const roleChange = async (answers) => {
+//     const val = await db.query(`UPDATE employee
+//     SET role_id = 5
+//     WHERE CONCAT(first_name, ' ', last_name) = '${answers.selection}';`);
+//     console.log(val);
+// }
+
+// employeeRole();
