@@ -5,7 +5,7 @@ const mysql = require('mysql2');
 const db = mysql.createConnection({
     user: "root",
     database: "employee_db",
-})
+}).promise();
 
 const init = () => {
     prompt({
@@ -136,16 +136,22 @@ const chooseOption = (selection) => {
 
 
 // init();
-db.query(`SELECT CONCAT(first_name, ' ', last_name) AS name FROM employee;`, function (err, results){
-    if (err) throw err;
-    console.log(results)
+const employeeRole = async () => {
     prompt({
         type: 'rawlist',
         name: 'selection',
         message: 'choose employee to update role',
-        choices: [`${results[0].name}`]
+        choices: await employeeList(),
     })
     .then((answers) => {
         console.log(answers.selection);
     })
-})
+}
+
+const employeeList = async () => {
+    const departmentQuery = `SELECT CONCAT(first_name, ' ', last_name) AS name FROM employee;`;
+    const departments = await db.query(departmentQuery);
+    return departments[0];
+};
+
+employeeRole();
