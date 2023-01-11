@@ -12,7 +12,7 @@ const init = () => {
         type: 'rawlist',
         name: 'selection',
         message: 'choose one of the following',
-        choices: ['VIEW ALL EMPLOYEES', 'VIEW ALL DEPARTMENTS', 'VIEW ALL ROLES', 'ADD A DEPARTMENT', 'ADD A ROLE', 'ADD AN EMPLOYEE']
+        choices: ['VIEW ALL EMPLOYEES', 'VIEW ALL DEPARTMENTS', 'VIEW ALL ROLES', 'ADD A DEPARTMENT', 'ADD A ROLE', 'ADD AN EMPLOYEE', 'UPDATE AN EMPLOYEE ROLE']
     })
         .then((answers) => {
 
@@ -110,9 +110,42 @@ const chooseOption = (selection) => {
                 })
             break;
         }
+        // case 'UPDATE AN EMPLOYEE ROLE': {
+        //     prompt([{
+        //         type: 'rawlist',
+        //         name: 'selection',
+        //         message: 'please select employee to update role',
+        //         choices: [employees]
+        //     },
+        //     ])
+        //         .then((answers) => {
+        //             console.log(answers);
+        //             db.query(`UPDATE employees
+        //             SET role_id=1
+        //             WHERE first_name=${};`,
+        //                 (err, employees) => {
+        //                     console.table(employees)
+        //                     init();
+        //                 });
+        //         })
+        //     break;
+        // }
     }
 };
 
 
 
-init();
+// init();
+db.query(`SELECT CONCAT(first_name, ' ', last_name) AS name FROM employee;`, function (err, results){
+    if (err) throw err;
+    console.log(results)
+    prompt({
+        type: 'rawlist',
+        name: 'selection',
+        message: 'choose employee to update role',
+        choices: [`${results[0].name}`]
+    })
+    .then((answers) => {
+        console.log(answers.selection);
+    })
+})
