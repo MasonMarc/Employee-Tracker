@@ -92,6 +92,10 @@ const chooseOption = async (selection) => {
                 });
             break;
         }
+        case 'UPDATE AN EMPLOYEE ROLE': {
+            employeeRole();
+            break;
+        }
     }
 };
 
@@ -99,7 +103,7 @@ const insertDepartment = async (answers) => {
     const val = await db.query(`INSERT INTO department (name)
         VALUES
         ('${answers.name}');`)
-                    console.table(val[0])
+    console.table(val[0])
 }
 
 const insertRole = async (answers) => {
@@ -114,38 +118,60 @@ const insertEmployee = async (answers) => {
     const val = await db.query(`INSERT INTO employee (first_name, last_name, role_id, manager_id)
     VALUES
     ('${answers.first_name}', '${answers.last_name}', 1, 1);`)
-    
+
     console.log(answers.first_name);
     console.log(answers.last_name);
     console.table(val[0])
 }
 
 
-init();
-// const employeeRole = async () => {
-//     const emp = await employeeList();
+const employeeRole = async () => {
+    const emp = await employeeList();
+    prompt({
+        type: 'rawlist',
+        name: 'selection',
+        message: 'choose employee to update role',
+        choices: emp,
+    })
+        .then((answers) => {
+            changeRole(answers);
+        })
+}
+
+const employeeList = async () => {
+    const employeeSelect = `SELECT CONCAT(first_name, ' ', last_name) AS name FROM employee;`;
+    const employees = await db.query(employeeSelect);
+    return employees[0];
+};
+
+// const roleChange = async (answers) => {
+//     const role = await roleList();
 //     prompt({
 //         type: 'rawlist',
 //         name: 'selection',
-//         message: 'choose employee to update role',
-//         choices: emp,
+//         message: 'choose new role',
+//         choices: role,
 //     })
 //         .then((answers) => {
-//             roleChange(answers);
+//             changeRole(answers);
+//             init();
 //         })
 // }
 
-// const employeeList = async () => {
-//     const employeeSelect = `SELECT CONCAT(first_name, ' ', last_name) AS name FROM employee;`;
-//     const employees = await db.query(employeeSelect);
-//     return employees[0];
-// };
-
-// const roleChange = async (answers) => {
-//     const val = await db.query(`UPDATE employee
-//     SET role_id = 5
-//     WHERE CONCAT(first_name, ' ', last_name) = '${answers.selection}';`);
-//     console.log(val);
-// }
-
-// employeeRole();
+const changeRole = async (answers) => {
+    const val = await db.query(`UPDATE employee
+    SET role_id = 5
+    WHERE CONCAT(first_name, ' ', last_name) = '${answers.selection}';`);
+    console.log(answers);
+    init();
+}
+// const roleList = async () => {
+    //     const role = `SELECT title FROM role;`;
+    //     const roles = await db.query(role);
+    //     console.log(roles[0]);
+    //     return roles[0];
+    // };
+    
+    
+    init();
+// employeeRole()
