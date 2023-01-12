@@ -24,3 +24,4 @@ Employee Management app made with mysql and node.js. allows users to view and ma
 [console table](https://www.npmjs.com/package/console.table)
 
 [mysql2](https://www.npmjs.com/package/mysql2)
+[Exployee-Tracker-Vid.webm](https://user-images.githubusercontent.com/116668971/211969094-aa5673c1-51d6-450b-a285-a55ee1236f20.webm)
